@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using Common;
 using System.Threading;
+using System.IO;
 
 namespace Snake_Druzhinin_Peshkarik
 {
@@ -196,6 +197,14 @@ namespace Snake_Druzhinin_Peshkarik
                 }
                 Send();
             }
+           
+        }
+        public static void SaveLeaders()
+        {
+            string json = JsonConvert.SerializeObject(Leaders);
+            StreamWriter SW = new StreamWriter("./leaders.txt");
+            SW.WriteLine(json);
+            SW.Close();
         }
 
     }
