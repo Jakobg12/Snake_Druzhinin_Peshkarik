@@ -7,8 +7,6 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Net;
-using System.Net.Sockets;
 using Common;
 using System.Threading;
 using System.IO;
@@ -115,14 +113,14 @@ namespace Snake_Druzhinin_Peshkarik
             {
                 Points = new List<Snakes.Point>()
                 {
-                    new Snakes.Point() {X=30,Y=10},
-                    new Snakes.Point() {X=20,Y=10},
-                    new Snakes.Point() {X=10,Y=10},
+                    new Snakes.Point() { X = 30, Y = 10 },
+                    new Snakes.Point() { X = 20 , Y = 10 },
+                    new Snakes.Point() { X = 10 , Y = 10 },
                 },
                 direction = Snakes.Direction.Start
             };
             viewModelGamesPlayer.Points = new Snakes.Point(new Random().Next(10, 783), new Random().Next(10, 410));
-            viewModelGamesPlayer.Add(viewModelGamesPlayer);
+            viewModelGames.Add(viewModelGamesPlayer);
             return viewModelGames.FindIndex(x => x == viewModelGamesPlayer);
         }
         public static void Timer()
