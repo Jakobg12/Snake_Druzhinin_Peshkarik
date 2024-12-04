@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Common;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,19 +15,10 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
-using System.Diagnostics;
-using System.Windows.Media.Animation;
-using Newtonsoft.Json;
-using Common;
-
-
-
 namespace SnakeWPF
 {
     /// <summary>
@@ -32,37 +29,48 @@ namespace SnakeWPF
         public static MainWindow mainWindow;
         public ViewModelUserSettings ViewModelUserSettings = new ViewModelUserSettings();
         public ViewModelGames ViewModelGames = null;
+        public List<ViewModelGames> ViewModelGamesList = null;
         public static IPAddress remoteIPAddress = IPAddress.Parse("127.0.0.1");
         public static int remotePort = 5001;
         public Thread tRec;
         public UdpClient receivingUdpClient;
         public Pages.Home Home = new Pages.Home();
         public Pages.Game Game = new Pages.Game();
+
         public MainWindow()
         {
             InitializeComponent();
+
             mainWindow = this;
             OpenPage(Home);
         }
+
         public void StartReceiver()
         {
             tRec = new Thread(new ThreadStart(Receiver));
             tRec.Start();
         }
+
+
         public void OpenPage(Page PageOpen)
         {
+
             frame.Navigate(PageOpen);
+
         }
+
         public void Receiver()
         {
             receivingUdpClient = new UdpClient(int.Parse(ViewModelUserSettings.Port));
             IPEndPoint RemoteIpEndPoint = null;
+
             try
             {
                 while (true)
                 {
                     byte[] receiveBytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
                     string returnData = Encoding.UTF8.GetString(receiveBytes);
+
                     if (ViewModelGames == null)
                     {
                         Dispatcher.Invoke(() =>
@@ -80,6 +88,10 @@ namespace SnakeWPF
                     }
                     else
                     {
+                        receiveBytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
+                        returnData = Encoding.UTF8.GetString(receiveBytes);
+                        ViewModelGamesList = JsonConvert.DeserializeObject<List<ViewModelGames>>(returnData.ToString());
+
                         Game.CreateUI();
                     }
                 }
@@ -88,15 +100,16 @@ namespace SnakeWPF
             {
                 Debug.WriteLine("Возникло исключение: " + ex.ToString() + "\n" + ex.Message);
             }
-
         }
         public static void Send(string datagram)
         {
             UdpClient sender = new UdpClient();
             IPEndPoint endPoint = new IPEndPoint(remoteIPAddress, remotePort);
+
             try
             {
                 byte[] bytes = Encoding.UTF8.GetBytes(datagram);
+
                 sender.Send(bytes, bytes.Length, endPoint);
             }
             catch (Exception ex)
@@ -108,6 +121,7 @@ namespace SnakeWPF
                 sender.Close();
             }
         }
+
         private void EventKeyUp(object sender, KeyEventArgs e)
         {
             if (!string.IsNullOrEmpty(ViewModelUserSettings.IPAddress) &&
@@ -124,11 +138,11 @@ namespace SnakeWPF
                     Send($"Right|{JsonConvert.SerializeObject(ViewModelUserSettings)}");
             }
         }
+
         private void QuitApplication(object sender, System.ComponentModel.CancelEventArgs e)
         {
             receivingUdpClient.Close();
             tRec.Abort();
         }
-
     }
 }

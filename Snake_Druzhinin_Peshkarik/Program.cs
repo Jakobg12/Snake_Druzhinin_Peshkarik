@@ -6,35 +6,22 @@ using System.Net;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Common;
+using Newtonsoft.Json;
 using System.Threading;
 using System.IO;
 
-namespace Snake_Druzhinin_Peshkarik
+namespace Snake_GrafMohov
 {
-    internal class Program
+    public class Program
     {
         public static List<Leaders> Leaders = new List<Leaders>();
         public static List<ViewModelUserSettings> remoteIPAddress = new List<ViewModelUserSettings>();
         public static List<ViewModelGames> viewModelGames = new List<ViewModelGames>();
+        public static Snakes.Point ApplePoint = new Snakes.Point(new Random().Next(10, 783), new Random().Next(10, 410));
         private static int localPort = 5001;
         public static int MaxSpeed = 15;
-        static void Main(string[] args)
-        {
-            try
-            {
-                Thread tRec = new Thread(new ThreadStart(Receiver));
-                tRec.Start();
-                Thread tTime = new Thread(Timer);
-                tTime.Start();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n " + ex.Message);
-            }
-        }
+
         private static void Send()
         {
             foreach (var User in remoteIPAddress)
@@ -46,9 +33,14 @@ namespace Snake_Druzhinin_Peshkarik
                 try
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(viewModelGames.Find(x => x.IdSnake == User.IdSnake)));
+
                     sender.Send(bytes, bytes.Length, endPoint);
+
+                    bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(viewModelGames.FindAll(x => x.IdSnake != User.IdSnake)));
+                    sender.Send(bytes, bytes.Length, endPoint);
+
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Отправил данные пользователю: {User.IPAddress}:{User.Port}");
+                    Console.WriteLine($"Отправил данные пользователю {User.IPAddress}:{User.Port}");
                 }
                 catch (Exception ex)
                 {
@@ -61,9 +53,11 @@ namespace Snake_Druzhinin_Peshkarik
                 }
             }
         }
+
         public static void Receiver()
         {
-            UdpClient receivingUdpClient = new UdpClient(localPort);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, localPort);
+            UdpClient receivingUdpClient = new UdpClient(localEndPoint);
             IPEndPoint RemoteIpEndPoint = null;
             try
             {
@@ -77,7 +71,7 @@ namespace Snake_Druzhinin_Peshkarik
                     if (returnData.ToString().Contains("/start"))
                     {
                         string[] dataMessage = returnData.ToString().Split('|');
-                        ViewModelUserSettings viewModelUserSettings = JsonConvert.DeserializeObject<ViewModelUserSettings>(dataMessage[1]);
+                        var viewModelUserSettings = JsonConvert.DeserializeObject<ViewModelUserSettings>(dataMessage[1]);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"Подключился пользователь: {viewModelUserSettings.IPAddress}:{viewModelUserSettings.Port}");
                         remoteIPAddress.Add(viewModelUserSettings);
@@ -90,13 +84,23 @@ namespace Snake_Druzhinin_Peshkarik
                         var viewModelUserSettings = JsonConvert.DeserializeObject<ViewModelUserSettings>(dataMessage[1]);
                         int IdPlayer = -1;
                         IdPlayer = remoteIPAddress.FindIndex(x => x.IPAddress == viewModelUserSettings.IPAddress && x.Port == viewModelUserSettings.Port);
-                        if (IdPlayer != -1)
+                        if (IdPlayer == -1)
                         {
-                            if (dataMessage[0] == "Up" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Down) viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Up;
-                            else if (dataMessage[0] == "Down" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Up) viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Down;
-                            else if (dataMessage[0] == "Left" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Right) viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Left;
-                            else if (dataMessage[0] == "Right" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Left) viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Right;
+                            continue;
                         }
+
+                        if (dataMessage[0] == "Up" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Down)
+                            viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Up;
+
+                        else if (dataMessage[0] == "Down" &&
+                        viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Up)
+                            viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Down;
+
+                        else if (dataMessage[0] == "Left" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Right)
+                            viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Left;
+
+                        else if (dataMessage[0] == "Right" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Left)
+                            viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Right;
                     }
                 }
             }
@@ -106,16 +110,17 @@ namespace Snake_Druzhinin_Peshkarik
                 Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n " + ex.Message);
             }
         }
+
         public static int AddSnake()
         {
-            ViewModelGames viewModelGamesPlayer = new ViewModelGames();
+            var viewModelGamesPlayer = new ViewModelGames();
             viewModelGamesPlayer.SnakesPlayers = new Snakes()
             {
                 Points = new List<Snakes.Point>()
                 {
-                    new Snakes.Point() { X = 30, Y = 10 },
-                    new Snakes.Point() { X = 20 , Y = 10 },
-                    new Snakes.Point() { X = 10 , Y = 10 },
+                    new Snakes.Point(){ X = 30, Y = 10 },
+                    new Snakes.Point(){ X = 20, Y = 10 },
+                    new Snakes.Point(){ X = 10, Y = 10 }
                 },
                 direction = Snakes.Direction.Start
             };
@@ -123,6 +128,7 @@ namespace Snake_Druzhinin_Peshkarik
             viewModelGames.Add(viewModelGamesPlayer);
             return viewModelGames.FindIndex(x => x == viewModelGamesPlayer);
         }
+
         public static void Timer()
         {
             while (true)
@@ -158,8 +164,8 @@ namespace Snake_Druzhinin_Peshkarik
                             if (Snake.direction == Snakes.Direction.Up) Snake.Points[i] = new Snakes.Point() { X = Snake.Points[i].X, Y = Snake.Points[i].Y - Speed };
                         }
                     }
-                    if (Snake.Points[0].X <= 0 || Snake.Points[0].X >= 793) Snake.GameOver = true;
-                    if (Snake.Points[0].Y <= 0 || Snake.Points[0].Y >= 723) Snake.GameOver = true;
+                    if (Snake.Points[0].X <= 0 || Snake.Points[0].X >= 783) Snake.GameOver = true;
+                    if (Snake.Points[0].Y <= 0 || Snake.Points[0].Y >= 410) Snake.GameOver = true;
                     if (Snake.direction != Snakes.Direction.Start)
                     {
                         for (int i = 1; i < Snake.Points.Count; i++)
@@ -174,25 +180,29 @@ namespace Snake_Druzhinin_Peshkarik
                             }
                         }
                     }
-                    if (Snake.Points[0].X >= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.X - 15 && Snake.Points[0].X <= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.X + 15)
+                    if ((Snake.Points[0].X >= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.X - 15 &&
+                                             Snake.Points[0].X <= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.X + 15) &&
+                                            (Snake.Points[0].Y >= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.Y - 15 &&
+                                             Snake.Points[0].Y <= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.Y + 15)
+                                           )
                     {
-                        if (Snake.Points[0].Y >= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.Y - 15 && Snake.Points[0].Y <= viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points.Y + 15)
+                        viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points = new Snakes.Point(new Random().Next(10, 783),
+                                                                                                      new Random().Next(10, 410));
+                        Snake.Points.Add(new Snakes.Point()
                         {
-                            viewModelGames.Find(x => x.IdSnake == User.IdSnake).Points = new Snakes.Point(new Random().Next(10, 783), new Random().Next(10, 410));
-                            Snake.Points.Add(new Snakes.Point()
-                            {
-                                X = Snake.Points[Snake.Points.Count - 1].X,
-                                Y = Snake.Points[Snake.Points.Count - 1].Y
-                            });
-                            LoadLeaders();
-                            Leaders.Add(new Leaders()
-                            {
-                                Name = User.Name,
-                                Points = Snake.Points.Count - 3
-                            });
-                            Leaders = Leaders.OrderByDescending(x => x.Points).ThenBy(x => x.Name).ToList();
-                            viewModelGames.Find(x => x.IdSnake == User.IdSnake).Top = Leaders.FindIndex(x => x.Points == Snake.Points.Count - 3 && x.Name == User.Name) + 1;
-                        }
+                            X = Snake.Points[Snake.Points.Count - 1].X,
+                            Y = Snake.Points[Snake.Points.Count - 1].Y
+                        });
+
+                        LoadLeaders();
+                        Leaders.Add(new Leaders()
+                        {
+                            Name = User.Name,
+                            Points = Snake.Points.Count - 3
+                        });
+
+                        Leaders = Leaders.OrderByDescending(x => x.Points).ThenBy(x => x.Name).ToList();
+                        viewModelGames.Find(x => x.IdSnake == User.IdSnake).Top = Leaders.FindIndex(x => x.Points == Snake.Points.Count - 3 && x.Name == User.Name) + 1;
                     }
                     if (Snake.GameOver)
                     {
@@ -207,8 +217,8 @@ namespace Snake_Druzhinin_Peshkarik
                 }
                 Send();
             }
-           
         }
+
         public static void SaveLeaders()
         {
             string json = JsonConvert.SerializeObject(Leaders);
@@ -216,6 +226,7 @@ namespace Snake_Druzhinin_Peshkarik
             SW.WriteLine(json);
             SW.Close();
         }
+
         public static void LoadLeaders()
         {
             if (File.Exists("./leaders.txt"))
@@ -223,16 +234,26 @@ namespace Snake_Druzhinin_Peshkarik
                 StreamReader SR = new StreamReader("./leaders.txt");
                 string json = SR.ReadLine();
                 SR.Close();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    Leaders = JsonConvert.DeserializeObject<List<Leaders>>(json);
-                }
-                else
-                    Leaders = new List<Leaders>();
+                if (!string.IsNullOrEmpty(json)) Leaders = JsonConvert.DeserializeObject<List<Leaders>>(json);
+                else Leaders = new List<Leaders>();
             }
-            else
-                Leaders = new List<Leaders>();
+            else Leaders = new List<Leaders>();
         }
 
+        static void Main(string[] args)
+        {
+            try
+            {
+                Thread tRec = new Thread(new ThreadStart(Receiver));
+                tRec.Start();
+                Thread tTime = new Thread(Timer);
+                tTime.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n " + ex.Message);
+            }
+        }
     }
 }

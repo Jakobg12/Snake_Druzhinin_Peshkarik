@@ -30,6 +30,7 @@ namespace SnakeWPF.Pages
             MainWindow.mainWindow.tRec.Abort();
             MainWindow.mainWindow.ViewModelGames = null;
         }
+
         private void OpenHome(object sender, RoutedEventArgs e)
         {
             MainWindow.mainWindow.OpenPage(MainWindow.mainWindow.Home);

@@ -19,6 +19,7 @@ namespace Common
             }
             public Point() { }
         }
+
         public enum Direction
         {
             Left,
@@ -27,6 +28,7 @@ namespace Common
             Down,
             Start
         }
+
         public List<Point> Points = new List<Point>();
         public Direction direction = Direction.Start;
         public bool GameOver = false;
