@@ -135,5 +135,11 @@
   <ItemGroup>
     <Resource Include="Image\Без названия.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\Без названия.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Pages\47b63546381a9b8805ae62652d6525a6.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

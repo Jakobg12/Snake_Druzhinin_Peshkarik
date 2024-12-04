@@ -11,7 +11,7 @@
     <Grid>
 
         <Grid.Background>
-            <ImageBrush ImageSource="C:\Users\danil\Source\Repos\Jakobg12\Snake_Druzhinin_Peshkarik\SnakeWPF\Image\Без названия.png"/>
+            <ImageBrush ImageSource="/Pages/Без названия.png"/>
         </Grid.Background>
         <Grid>
             <Grid Width="320" Height="200" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,197,0,0">
@@ -25,7 +25,7 @@
                 <Label Content="Your Name:" HorizontalAlignment="Left" Margin="42,92,0,0" VerticalAlignment="Top"
                        Foreground="Black" FontFamily="Forte"/>
                 <TextBox x:Name="ip" HorizontalAlignment="Left" Height="25" Margin="42,62,0,0" TextWrapping="Wrap"
-                         Text="192.168.0.107" VerticalAlignment="Top" Width="155" VerticalContentAlignment="Center"
+                         Text="127.0.0.1" VerticalAlignment="Top" Width="155" VerticalContentAlignment="Center"
                          HorizontalContentAlignment="Center" FontFamily="Forte"/>
                 <TextBox x:Name="port" HorizontalAlignment="Left" Height="25" Margin="202,62,0,0" TextWrapping="Wrap"
                          Text="5000" VerticalAlignment="Top" Width="74" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"

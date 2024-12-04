@@ -11,7 +11,7 @@
     <Grid>
 
         <Grid.Background>
-            <ImageBrush ImageSource="C:\Users\danil\Source\Repos\Jakobg12\Snake_Druzhinin_Peshkarik\SnakeWPF\Image\47b63546381a9b8805ae62652d6525a6.jpg"/>
+            <ImageBrush ImageSource="/Pages/47b63546381a9b8805ae62652d6525a6.jpg"/>
         </Grid.Background>
         <Canvas x:Name="Canvas">
 

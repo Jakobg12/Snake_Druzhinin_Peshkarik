@@ -51,20 +51,7 @@ namespace SnakeWPF
         }
         public void OpenPage(Page PageOpen)
         {
-            DoubleAnimation startAnimation = new DoubleAnimation();
-            startAnimation.From = 1;
-            startAnimation.To = 0;
-            startAnimation.Duration = TimeSpan.FromSeconds(0.6);
-            startAnimation.Completed += delegate
-            {
-                frame.Navigate(PageOpen);
-                DoubleAnimation endAnimation = new DoubleAnimation();
-                endAnimation.From = 0;
-                endAnimation.To = 1;
-                endAnimation.Duration = TimeSpan.FromSeconds(0.6);
-                frame.BeginAnimation(OpacityProperty, startAnimation);
-            };
-            frame.BeginAnimation(OpacityProperty, startAnimation);
+            frame.Navigate(PageOpen);
         }
         public void Receiver()
         {

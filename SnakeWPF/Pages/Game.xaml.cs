@@ -76,14 +76,14 @@ namespace SnakeWPF.Pages
                     {
                         Width = 20,
                         Height = 20,
-                        Margin = new Thickness(SnakePoint.X - 10, SnakePoint.Y - 10, 0, 0),
+                        Margin = new Thickness(SnakePoint.X - 15, SnakePoint.Y - 10, 0, 0),
                         Fill = Color,
                         Stroke = Brushes.Black
                     };
                     Canvas.Children.Add(ellipse);
                 }
                 ImageBrush myBrush = new ImageBrush();
-                myBrush.ImageSource = new BitmapImage(new Uri($"pack://application:,,,/Image/Apple.png"));
+                
                 Ellipse points = new Ellipse()
                 {
                     Width = 40,
