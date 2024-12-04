@@ -24,6 +24,18 @@ namespace Snake_Druzhinin_Peshkarik
         public static int MaxSpeed = 15;
         static void Main(string[] args)
         {
+            try
+            {
+                Thread tRec = new Thread(new ThreadStart(Receiver));
+                tRec.Start();
+                Thread tTime = new Thread(Timer);
+                tTime.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Возникло исключение: " + ex.ToString() + "\n " + ex.Message);
+            }
         }
         private static void Send()
         {
@@ -31,14 +43,14 @@ namespace Snake_Druzhinin_Peshkarik
             {
                 UdpClient sender = new UdpClient();
                 IPEndPoint endPoint = new IPEndPoint(
-                    IPAddress.Parse(User.IPAdress),
+                    IPAddress.Parse(User.IPAddress),
                     int.Parse(User.Port));
                 try
                 {
                     byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(viewModelGames.Find(x => x.IdSnake == User.IdSnake)));
                     sender.Send(bytes, bytes.Length, endPoint);
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"Отправил данные пользователю: {User.IPAdress}:{User.Port}");
+                    Console.WriteLine($"Отправил данные пользователю: {User.IPAddress}:{User.Port}");
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +81,7 @@ namespace Snake_Druzhinin_Peshkarik
                         string[] dataMessage = returnData.ToString().Split('|');
                         ViewModelUserSettings viewModelUserSettings = JsonConvert.DeserializeObject<ViewModelUserSettings>(dataMessage[1]);
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Подключился пользователь: {viewModelUserSettings.IPAdress}:{viewModelUserSettings.Port}");
+                        Console.WriteLine($"Подключился пользователь: {viewModelUserSettings.IPAddress}:{viewModelUserSettings.Port}");
                         remoteIPAddress.Add(viewModelUserSettings);
                         viewModelUserSettings.IdSnake = AddSnake();
                         viewModelGames[viewModelUserSettings.IdSnake].IdSnake = viewModelUserSettings.IdSnake;
@@ -79,7 +91,7 @@ namespace Snake_Druzhinin_Peshkarik
                         string[] dataMessage = returnData.ToString().Split('|');
                         var viewModelUserSettings = JsonConvert.DeserializeObject<ViewModelUserSettings>(dataMessage[1]);
                         int IdPlayer = -1;
-                        IdPlayer = remoteIPAddress.FindIndex(x => x.IPAdress == viewModelUserSettings.IPAdress && x.Port == viewModelUserSettings.Port);
+                        IdPlayer = remoteIPAddress.FindIndex(x => x.IPAddress == viewModelUserSettings.IPAddress && x.Port == viewModelUserSettings.Port);
                         if (IdPlayer != -1)
                         {
                             if (dataMessage[0] == "Up" && viewModelGames[IdPlayer].SnakesPlayers.direction != Snakes.Direction.Down) viewModelGames[IdPlayer].SnakesPlayers.direction = Snakes.Direction.Up;
@@ -174,7 +186,7 @@ namespace Snake_Druzhinin_Peshkarik
                                 X = Snake.Points[Snake.Points.Count - 1].X,
                                 Y = Snake.Points[Snake.Points.Count - 1].Y
                             });
-                            LoadLeader();
+                            LoadLeaders();
                             Leaders.Add(new Leaders()
                             {
                                 Name = User.Name,
