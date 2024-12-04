@@ -28,6 +28,6 @@ namespace Common
         }
         public List<Point> points = new List<Point>();
         public Direction direction = Direction.Start;
-        public bool GameOver = false;
+        public bool GameOver = falВse;
     }
 }
