@@ -5,7 +5,11 @@ VisualStudioVersion = 17.11.35431.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snake_Druzhinin_Peshkarik", "Snake_Druzhinin_Peshkarik\Snake_Druzhinin_Peshkarik.csproj", "{52350B5D-7196-480E-9845-0B4724ED2C28}"
 EndProject
+<<<<<<< Klient
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnakeWPF", "SnakeWPF\SnakeWPF.csproj", "{B326F4BB-E97A-465E-AE87-E44E73AD057C}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{265ACE14-4090-4E42-8924-BF2519AE9305}"
+>>>>>>> master
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +21,17 @@ Global
 		{52350B5D-7196-480E-9845-0B4724ED2C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52350B5D-7196-480E-9845-0B4724ED2C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52350B5D-7196-480E-9845-0B4724ED2C28}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< Klient
 		{B326F4BB-E97A-465E-AE87-E44E73AD057C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B326F4BB-E97A-465E-AE87-E44E73AD057C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B326F4BB-E97A-465E-AE87-E44E73AD057C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B326F4BB-E97A-465E-AE87-E44E73AD057C}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{265ACE14-4090-4E42-8924-BF2519AE9305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{265ACE14-4090-4E42-8924-BF2519AE9305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{265ACE14-4090-4E42-8924-BF2519AE9305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{265ACE14-4090-4E42-8924-BF2519AE9305}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> master
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
