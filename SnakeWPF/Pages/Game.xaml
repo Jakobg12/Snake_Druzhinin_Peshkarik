@@ -11,10 +11,9 @@
     <Grid>
 
         <Grid.Background>
-            <ImageBrush ImageSource="/Pages/47b63546381a9b8805ae62652d6525a6.jpg"/>
+            <ImageBrush ImageSource="/Pages/47b63546381a9b8805ae62652d6525a6.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
         <Canvas x:Name="Canvas">
-
         </Canvas>
     </Grid>
 </Page>

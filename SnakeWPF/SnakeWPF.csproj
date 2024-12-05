@@ -124,10 +124,6 @@
       <Project>{265ace14-4090-4e42-8924-bf2519ae9305}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Snake_Druzhinin_Peshkarik\Snake_Druzhinin_Peshkarik.csproj">
-      <Project>{52350b5d-7196-480e-9845-0b4724ed2c28}</Project>
-      <Name>Snake_Druzhinin_Peshkarik</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\47b63546381a9b8805ae62652d6525a6.jpg" />

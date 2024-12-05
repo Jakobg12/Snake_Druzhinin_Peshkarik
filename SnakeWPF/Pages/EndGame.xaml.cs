@@ -23,6 +23,7 @@ namespace SnakeWPF.Pages
         public EndGame()
         {
             InitializeComponent();
+
             name.Content = MainWindow.mainWindow.ViewModelUserSettings.Name;
             top.Content = MainWindow.mainWindow.ViewModelGames.Top;
             glasses.Content = $"{MainWindow.mainWindow.ViewModelGames.SnakesPlayers.Points.Count - 3} glasses";
